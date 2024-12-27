@@ -1,0 +1,180 @@
+<p-table
+  [value]="Body"
+  [lazy]="true"
+  [paginator]="paginatorEnabled"
+  [rows]="5"
+  [totalRecords]="totalRecords"
+  responsiveLayout="stack"
+  [breakpoint]="'960px'"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [rowsPerPageOptions]="dtOptions.lengthMenu"
+  [customSort]="true"
+  [loading]="isLoading"
+  (onLazyLoad)="customizedFunc($event)"
+  (onSort)="onSort($event)"
+  (onPage)="onPageChange($event)"
+  [lazyLoadOnInit]="false"
+  styleClass=""
+  
+  [scrollable]="true" 
+  scrollHeight="350px"
+>
+  <ng-template pTemplate="caption" *ngIf="searchEnable">
+    <div class="flex flex-wrap gap-2 justify-content-end align-items-center">
+      <!-- Add Button on the left -->
+      <p-button *ngIf="showAddButton" (click)="emitAddEvent()">
+        {{ addButtonLabel }}
+      </p-button>
+
+      <div class="flex w-full gap-2  align-content-center ">
+      <!-- Search Box  -->
+      <div *ngIf="!isSearchBarDisabled" class="p-input-icon-left w-full">
+        <i
+          class="pi pi-search cursor-pointer"
+          (click)="searchKeywordEmit()"
+        ></i>
+        <input
+          pInputText
+          type="text"
+          placeholder="Search keyword"
+          id="searchfield"
+          [(ngModel)]="searchKeyword"
+          ngClass="w-full outline-none border-none my-4 table-search-input"
+          (keydown.enter)="searchKeywordEmit()"
+          (ngModelChange)="bindSearch()"
+        />
+      </div>
+      <div class="flex align-items-center">
+        <p-dropdown  [options]="options" [(ngModel)]="value" optionLabel="optionLabel" optionValue="value" (onChange)='emitUpdateStatusSelection($event)'  ></p-dropdown>
+      </div>
+    </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th
+        *ngFor="let item of Head"
+        [pSortableColumn]="item.hasSorting ? item.field : null"
+        [style.background-color]="headerColor"
+        [style.color]="headerTextColor"
+        >
+       <div class="flex align-items-center gap-2">
+        {{ item.name }}
+        <span *ngIf="item.hasSorting" style="height: 24px; width: 24px;">
+          <!-- <img
+            *ngIf="sortField !== item.field || sortOrder === null"
+            src="assets/sort.svg"
+            alt="No sorting"
+            class="pi pi-align-center"
+          /> -->
+          <img
+            *ngIf="sortField === item.field && sortOrder === 1"
+            src="assets/sort-up.svg"
+            alt="Ascending"
+            class="pi pi-angle-up"
+            style="transform: rotateX(180deg);"
+
+          />
+          <img
+            *ngIf="sortField === item.field && sortOrder === -1"
+            src="assets/sort-down.svg"
+            alt="Descending"
+            class="pi pi-angle-down"
+          />
+        </span>
+        
+       </div>
+        <!-- <p-sortIcon
+          [field]="item.field"
+          *ngIf="item.hasSorting"
+          ngClass="sort-icon text-white"
+        ></p-sortIcon> -->
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-tr>
+    <tr>
+      <ng-container *ngFor="let tdField of Head">
+        <td *ngIf="tdField.field !== 'action'">
+          <ng-container *ngIf="isList(tr[tdField.field]); else normalContent">
+            <!-- Adjust list -->
+            <ng-container *ngFor="let item of tr[tdField.field]">
+              <!-- Adjusting list items as needed -->
+              <div class="card flex align-items-center gap-2 flex-wrap ">
+                <p-chip label="{{ item }}" />
+              </div>
+              <!-- <p-chip label="{{ item }}" class="gap-2" /> -->
+              <!-- <span class="chip">{{ item }}</span> -->
+            </ng-container>
+          </ng-container>
+          <ng-template #normalContent>
+            <ng-container *ngIf="isDate(tr[tdField.field]); else displayValue">
+              {{ tr[tdField.field] | date : "medium" }}
+              <!-- Adjust date format as needed -->
+            </ng-container>
+            <ng-template #displayValue>
+              <ng-container>
+                <!-- Normal format as needed -->
+
+                <div [innerHTML]="tr[tdField.field]"></div>
+                <!-- {{ (tr[tdField.field].replace("Lahore",' <span style="color:red;">talha</span> ')) tr[tdField.field] }} -->
+              </ng-container>
+            </ng-template>
+          </ng-template>
+        </td>
+      </ng-container>
+      <td>
+        <ng-container *ngFor="let actionField of ActionFields">
+          <!-- <i
+          class="pi {{ actionField.icon }}"
+          title="{{ actionField.title }}"
+          style="color: green; font-size: 1.5rem; cursor: pointer; margin: 12px;"
+          (click)="emitObject(actionField.event, tr)"
+          *ngIf="checkVisibilityCriteria(actionField, tr)"
+        ></i> -->
+        <img class="mr-3 cursor-pointer" [src]="actionField.icon" alt="" 
+        (click)="emitObject(actionField.event, tr)"
+        
+        *ngIf="checkVisibilityCriteria(actionField, tr)"
+        >
+        
+        </ng-container>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <tr *ngIf="Body.length <= 0">
+      <td [attr.colspan]="Head.length">
+        <div style="text-align: center">No data available</div>
+      </td>
+    </tr>
+  </ng-template>
+
+  <!-- <ng-template pTemplate="summary"> 
+  <div class="custom-paginator-container">
+    <div class="paginator-left">
+      <span>Show</span>
+      <p-dropdown 
+        [options]="rowsPerPageOptions" 
+        [(ngModel)]="rows"
+        (onChange)="onRowsChange($event)"
+        styleClass="custom-dropdown"
+      ></p-dropdown>
+    </div>
+  
+    <div class="paginator-summary">
+      Showing {{ first }}-{{ first + rows > totalRecords ? totalRecords : first + rows }} of {{ totalRecords }}
+    </div>
+  
+    <p-paginator
+      [rows]="rows"
+      [totalRecords]="totalRecords"
+      [rowsPerPageOptions]="rowsPerPageOptions"
+      [pageLinkSize]="3"
+      (onPageChange)="onPageChange($event)"
+      styleClass="custom-paginator"
+    ></p-paginator>
+  </div>
+</ng-template> -->
+</p-table>
