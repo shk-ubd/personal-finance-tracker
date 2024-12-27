@@ -1,0 +1,56 @@
+<div class="min-h-screen bg-black flex align-items-center justify-content-center">
+    <div class="card login-card">
+      <h1>Sign Up</h1>
+      <form [formGroup]="signupForm" (ngSubmit)="register()">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            pInputText
+            formControlName="username"
+            class="form-control"
+            id="username"
+            placeholder="Enter username"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            pInputText
+            formControlName="email"
+            class="form-control"
+            id="email"
+            placeholder="Enter email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            pInputText
+            formControlName="password"
+            class="form-control"
+            id="password"
+            placeholder="Password"
+          />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            pInputText
+            formControlName="confirmPassword"
+            class="form-control"
+            id="confirmPassword"
+            placeholder="Confirm Password"
+          />
+        </div>
+        <p-button label="Register" />
+      </form>
+      <div class="text-center mt-2">
+        <p>Already have an account? <span class="url-link" (click)="routeToLogin()">Log in here</span></p>
+      </div>
+    </div>
+  </div>
+  
