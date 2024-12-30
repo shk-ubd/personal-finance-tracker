@@ -1,0 +1,8 @@
+.navbar {
+  width: calc(100% - 320px);
+  height: 60px;
+  background: #ff0000;
+  z-index: 11;
+  position: fixed;
+  top: 0;
+}

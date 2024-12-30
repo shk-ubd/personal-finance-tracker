@@ -24,6 +24,7 @@ export class LoginComponent {
 
   login(){
     console.log(this.loginForm.value);
+    this.router.navigate(['/dashboard']);
   }
 
   routeToSignUp(){

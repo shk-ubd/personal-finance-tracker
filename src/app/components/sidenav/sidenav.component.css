@@ -1,0 +1,45 @@
+::ng-deep .p-drawer {
+  background: #000 !important;
+  padding: 10px 20px;
+  border: none !important;
+  width: 300px;
+  min-height: 100vh;
+  height: 100%;
+  overflow-y: auto;
+  width: 320px;
+}
+
+li {
+  list-style: none;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  font-weight: 700;
+  font-size: larger;
+  margin-bottom: 10px;
+}
+
+.navigation-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--dim-gray);
+  margin: 10px 0;
+}
+
+.active-link {
+  background: var(--primary-green);
+  border-color: var(--primary-green);
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
